@@ -66,15 +66,13 @@ class Assignment1:
         def run(self):
             while self.outer.sim_active:
                 self.machineSleep()
+                self.isRequestSafe(self.machineID)
                 self.printRequest(self.machineID)
+                self.postRequest(self.machineID)
 
-        def machineSleep(self):
-            sleepSeconds = random.randint(1, self.outer.MAX_MACHINE_SLEEP)
-            time.sleep(sleepSeconds)
+        def isRequestSafe(self, id):
+            self.outer.semaphore.acquire()
+            self.outer.binary.acquire()
 
-        def printRequest(self, id):
-            print(f"Machine {id} Sent a print request")
-            # Build a print document
-            doc = printDoc(f"My name is machine {id}", id)
-            # Insert it in the print queue
-            self.outer.print_list.queueInsert(doc)
+        def postRequest(self, id):
+            self.outer.binary.release()
