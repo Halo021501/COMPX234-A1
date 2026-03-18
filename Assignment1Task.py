@@ -34,6 +34,11 @@ class Assignment1:
 
         time.sleep(self.SIMULATION_TIME)
         self.sim_active = False
+        for t in self.mThreads:
+            t.join(timeout=1)
+        for t in self.pThreads:
+            t.join(timeout=1)
+        print("Simulation Ended.")
 
     # Printer class
     class printerThread(threading.Thread):
