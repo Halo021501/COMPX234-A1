@@ -1,3 +1,10 @@
+"""
+COMPX234-26A Assignment 1
+Author: [CHEN CHUNHAO / 20243006949]
+Date: 2026-03-19
+Description: This program simulates a print queue system using Counting and Binary Semaphores to prevent overwriting and ensure mutual exclusion.
+"""
+
 import threading
 import time
 import random
