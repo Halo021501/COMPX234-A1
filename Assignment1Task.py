@@ -18,6 +18,8 @@ class Assignment1:
         self.print_list = printList()
         self.mThreads = []
         self.pThreads = []
+        self.semaphore = threading.Semaphore(self.NUM_PRINTERS)
+        self.binary = threading.Semaphore(1)
 
     def startSimulation(self):
         for i in range(self.NUM_MACHINES):
