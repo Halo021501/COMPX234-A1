@@ -42,10 +42,8 @@ class Assignment1:
 
         def run(self):
             while self.outer.sim_active:
-                # Simulate printer taking some time to print the document
                 self.printerSleep()
-                # Grab the request at the head of the queue and print it
-                # Write code here
+                self.printDox(self.printerID)
 
         def printerSleep(self):
             sleepSeconds = random.randint(1, self.outer.MAX_PRINTER_SLEEP)
@@ -65,10 +63,8 @@ class Assignment1:
 
         def run(self):
             while self.outer.sim_active:
-                # Machine sleeps for a random amount of time
                 self.machineSleep()
-                # Machine wakes up and sends a print request
-                # Write code here
+                self.printRequest(self.machineID)
 
         def machineSleep(self):
             sleepSeconds = random.randint(1, self.outer.MAX_MACHINE_SLEEP)
