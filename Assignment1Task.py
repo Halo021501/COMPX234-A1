@@ -1,7 +1,7 @@
 """
 COMPX234-26A Assignment 1
 Author: [CHEN CHUNHAO / 20243006949]
-Date: 2026-03-19
+Date: 2026-03-25
 Description: This program simulates a print queue system using Counting and Binary Semaphores to prevent overwriting and ensure mutual exclusion.
 """
 
@@ -33,10 +33,11 @@ class Assignment1:
             self.mThreads.append(self.machineThread(i, self))
         for i in range(self.NUM_PRINTERS):
             self.pThreads.append(self.printerThread(i, self))
-
         for t in self.mThreads:
+            t.daemon = True
             t.start()
         for t in self.pThreads:
+            t.daemon = True
             t.start()
 
         time.sleep(self.SIMULATION_TIME)
@@ -63,8 +64,11 @@ class Assignment1:
 
         def printDox(self, printerID):
             print(f"Printer ID: {printerID} : now available")
-            # Print from the queue
-            self.outer.print_list.queuePrint(printerID)
+            self.outer.binary.acquire()
+            if self.outer.print_list.head is not None:
+                self.outer.print_list.queuePrint(printerID)
+                self.outer.semaphore.release()
+            self.outer.binary.release()
 
     # Machine class
     class machineThread(threading.Thread):
@@ -90,8 +94,17 @@ class Assignment1:
             self.outer.print_list.queueInsert(doc)
 
         def isRequestSafe(self, id):
-            self.outer.semaphore.acquire()
-            self.outer.binary.acquire()
+            print(f"Machine {id} Checking availability")
+            try:
+                self.outer.semaphore.acquire()
+            except Exception as e:
+                print("Counting semaphore acquisation failed",e)
+            try:
+                self.outer.binary.acquire()
+            except Exception as ex:
+                print("Binary acquisation failed", ex)
+            print(f"Machine {id} will proceed")
 
         def postRequest(self, id):
+            print(f"Machine {id} Releasing binary semaphore")
             self.outer.binary.release()
